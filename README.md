@@ -39,6 +39,6 @@
 
 ## repacking boot.img
 
-* 基于前面的《unpacking boot.img》一小节才能运行后续命令；
+* 基于前面的《[unpacking boot.img](https://github.com/ZengjfOS/BootimgTool#unpacking-bootimg)》一小节才能运行后续命令；
 * 运行命令：`./repack`；
 * 将在当前目录看到：`newboot.img`。
