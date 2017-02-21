@@ -1,0 +1,33 @@
+#!/bin/sh
+echo "begin to repacking boot.img"
+
+KERNEL=boot/boot.img-kernel
+RAMDISK=boot/new-ramdisk.cpio.gz
+PAGESIZE=2048
+BASE=0x10800000
+RAMDISKADDR=0x11800000
+CMDLINE="console=ttymxc0,115200 init=/init video=mxcfb0:dev=ldb,bpp=32 video=mxcfb1:off video=mxcfb2:off fbmem=10M fb0base=0x27b00000 vmalloc=400M androidboot.console=ttymxc0 androidboot.hardware=freescale"
+
+if [ ! -d boot/ramdisk ] ; then
+	echo "    \nCan't find the  boot/ramdisk directory.\n "
+	exit 0
+fi
+
+./repack_ramdisk boot/ramdisk
+
+if [ ! -f $RAMDISK ] ; then
+	echo "    \nCan't find the boot/new-ramdisk.cpio.gz file.\n "
+	exit 0
+fi
+
+if [ ! -f $KERNEL ] ; then
+	echo "    \nCan't find the boot/boot.img-kernel file.\n "
+	exit 0
+fi
+
+# There is three ways for mkbootimg
+#./mkbootimg --kernel boot/boot.img-kernel --ramdisk boot/new-ramdisk.cpio.gz --pagesize 2048 --base 0x10800000 --ramdiskaddr $RAMDISKADDR --cmdline "console=ttymxc0,115200 init=/init video=mxcfb0:dev=ldb,bpp=32 video=mxcfb1:off video=mxcfb2:off fbmem=10M fb0base=0x27b00000 vmalloc=400M androidboot.console=ttymxc0 androidboot.hardware=freescale" -o newboot.img 
+./mkbootimg --kernel $KERNEL --ramdisk $RAMDISK --pagesize $PAGESIZE --base $BASE --ramdiskaddr $RAMDISKADDR --cmdline "$CMDLINE" -o newboot.img 
+#./mkbootimg --kernel $KERNEL --ramdisk $RAMDISK --cmdline "$CMDLINE" -o newboot.img 
+
+echo "repacking boot.img over"
